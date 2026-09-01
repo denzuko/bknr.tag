@@ -48,6 +48,21 @@
       (is (member b found))))
   (bknr.datastore:close-store))
 
+(test tagged-with-returns-exactly-the-tagged-objects
+  ;; The test above only checks A and B are present; this checks
+  ;; TAGGED-WITH returns exactly {A, B}, no unexpected extra member,
+  ;; regardless of hash-list-index's own iteration order.
+  (fresh-store)
+  (let ((a (bknr.datastore:with-transaction () (make-instance 'bknr.tag:taggable)))
+        (b (bknr.datastore:with-transaction () (make-instance 'bknr.tag:taggable))))
+    (bknr.tag:add-tag a "urgent")
+    (bknr.tag:add-tag b "urgent")
+    (fiveam-matchers:assert-that
+     (bknr.tag:tagged-with "urgent")
+     (fiveam-matchers:contains-in-any-order
+      (fiveam-matchers:equal-to a) (fiveam-matchers:equal-to b))))
+  (bknr.datastore:close-store))
+
 (test remove-tag-stops-object-being-found
   (fresh-store)
   (let ((a (bknr.datastore:with-transaction () (make-instance 'bknr.tag:taggable))))

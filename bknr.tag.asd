@@ -15,7 +15,7 @@
 (asdf:defsystem "bknr.tag/tests"
   :description "FiveAM test suite for bknr.tag."
   :license "BSD-3-Clause"
-  :depends-on ("bknr.tag" "fiveam" "uiop")
+  :depends-on ("bknr.tag" "fiveam" "fiveam-matchers" "uiop")
   :pathname "t/"
   :components ((:file "test")))
 
