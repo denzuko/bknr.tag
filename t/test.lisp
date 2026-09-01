@@ -56,6 +56,15 @@
     (is (not (member a (bknr.tag:tagged-with "urgent")))))
   (bknr.datastore:close-store))
 
+(test remove-tag-on-a-tag-never-added-returns-nil
+  ;; REMOVE-TAG's own IF had never had its ELSE branch exercised
+  ;; (removing a tag the object never had), even though the
+  ;; docstring documents this exact return value.
+  (fresh-store)
+  (let ((a (bknr.datastore:with-transaction () (make-instance 'bknr.tag:taggable))))
+    (is (eq nil (bknr.tag:remove-tag a "never-added"))))
+  (bknr.datastore:close-store))
+
 (test removing-one-tag-leaves-others-intact
   (fresh-store)
   (let ((a (bknr.datastore:with-transaction () (make-instance 'bknr.tag:taggable))))
